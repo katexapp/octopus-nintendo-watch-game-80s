@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Nintendo Game & Watch: Octopus (1981)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      touch-action: manipulation;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 50% 30%, #20242b, #0d0f12);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 10px;
+      overflow-x: hidden;
+    }
+
+    /* Handheld body with classic 1981 dark wine-red / burgundy finish */
+    .casing-chassis {
+      background: linear-gradient(175deg, #87141f 0%, #680d15 45%, #46060b 100%);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.85), inset 0 2px 3px rgba(255, 255, 255, 0.25), inset 0 -3px 6px rgba(0, 0, 0, 0.6);
+      border-radius: 36px;
+      border: 3.5px solid #2e0307;
+    }
+
+    /* Champagne gold brushed aluminum faceplate with hairline borders */
+    .champagne-plate {
+      background: linear-gradient(135deg, #faefc5 0%, #ecd48b 35%, #d8ba66 70%, #ebd793 100%);
+      box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8), inset 0 -2px 5px rgba(110, 80, 20, 0.4), 0 4px 10px rgba(0,0,0,0.3);
+      border: 2px solid #a68128;
+    }
+
+    /* Recessed screen bezel with red frame */
+    .bezel-frame {
+      background: #73131c;
+      box-shadow: inset 0 5px 12px rgba(0,0,0,0.85), 0 2px 4px rgba(255,255,255,0.4);
+      border-radius: 14px;
+      border: 2px solid #4a070c;
+    }
+
+    /* LCD Screen with authentic G&W color reproduction */
+    .lcd-display {
+      background-color: #c9d7c0;
+      box-shadow: inset 3px 3px 12px rgba(0, 0, 0, 0.4), inset -2px -2px 8px rgba(255, 255, 255, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle LCD segment ghosting and matrix texture */
+    .lcd-display::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.02) 0px,
+        rgba(0, 0, 0, 0.02) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    /* Authentic vintage 7-Segment Digital Clock & Score */
+    .lcd-digits {
+      font-family: 'VT323', monospace;
+      letter-spacing: 2px;
+    }
+
+    /* Burgundy/red circular rubber buttons */
+    .game-button {
+      background: radial-gradient(circle at 35% 30%, #e82c3c 0%, #a8101e 65%, #6a050f 100%);
+      box-shadow: 0 6px 0 #3a0307, 0 10px 18px rgba(0,0,0,0.5), inset 0 2px 3px rgba(255,255,255,0.45);
+      transition: transform 0.05s ease, box-shadow 0.05s ease;
+    }
+    .game-button:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #3a0307, 0 4px 8px rgba(0,0,0,0.5), inset 0 1px 2px rgba(0,0,0,0.6);
+    }
+
+    /* Small gold/bronze pill buttons for Game A, Game B, Time */
+    .system-btn {
+      background: radial-gradient(circle at 40% 30%, #ffffff 0%, #d8d8d8 50%, #9e9e9e 100%);
+      box-shadow: 0 3px 0 #4f4f4f, 0 5px 8px rgba(0,0,0,0.4);
+      transition: transform 0.05s ease, box-shadow 0.05s ease;
+    }
+    .system-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #4f4f4f, 0 2px 4px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center">
+
+  <!-- MAIN HANDHELD CONSOLE -->
+  <div class="casing-chassis w-full max-w-[530px] p-3.5 sm:p-5 flex flex-col items-center relative">
+    
+    <!-- Top Decorative Header -->
+    <div class="w-full flex items-center justify-between px-2 mb-1.5 text-[#ebd793] font-bold text-[11px] tracking-widest">
+      <div class="flex items-center gap-1.5">
+        <span class="border border-[#ebd793] px-1 py-0.2 rounded text-[9px]">Nintendo</span>
+        <span class="tracking-wider">GAME &amp; WATCH</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="soundToggle" class="system-btn px-2.5 py-0.5 rounded-full text-[9px] font-bold text-neutral-800 tracking-normal border border-neutral-400">
+          <span id="soundLabel">🔊 ON</span>
+        </button>
+        <button id="aclBtn" class="system-btn px-2 py-0.5 rounded-full text-[9px] font-bold text-neutral-800 tracking-normal border border-neutral-400">
+          ACL
+        </button>
+      </div>
+    </div>
+
+    <!-- Gold Faceplate -->
+    <div class="champagne-plate w-full rounded-2xl p-2 sm:p-3.5 flex flex-col items-center relative">
+      
+      <!-- Top Sub-Bar: System Mode Buttons & Titles -->
+      <div class="w-full flex justify-between items-center mb-1 px-1">
+        <div class="text-[12px] font-black tracking-[0.2em] text-[#56070d]">
+          OCTOPUS
+        </div>
+
+        <!-- Mode Select Buttons: Game A, Game B, Time -->
+        <div class="flex items-center gap-1.5">
+          <div class="flex flex-col items-center">
+            <button id="btnGameA" class="system-btn w-6 h-4 sm:w-7 sm:h-4 rounded border border-neutral-400"></button>
+            <span class="text-[8px] font-bold text-[#56070d] tracking-tighter">GAME A</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <button id="btnGameB" class="system-btn w-6 h-4 sm:w-7 sm:h-4 rounded border border-neutral-400"></button>
+            <span class="text-[8px] font-bold text-[#56070d] tracking-tighter">GAME B</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <button id="btnTime" class="system-btn w-6 h-4 sm:w-7 sm:h-4 rounded border border-neutral-400"></button>
+            <span class="text-[8px] font-bold text-[#56070d] tracking-tighter">TIME</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recessed Screen Bezel -->
+      <div class="bezel-frame p-2 w-full rounded-xl">
+        <!-- Dual-Layer LCD: Canvas for silk overlay & sharp discrete segment liquid crystal -->
+        <div class="lcd-display w-full aspect-[4/3] rounded-lg border border-[#76846f] relative">
+          
+          <!-- Game Canvas -->
+          <canvas id="gwCanvas" width="560" height="420" class="w-full h-full block"></canvas>
+
+          <!-- Game Over Alert Popup -->
+          <div id="gameOverModal" class="absolute inset-0 bg-black/45 z-20 flex flex-col items-center justify-center hidden backdrop-blur-[0.5px]">
+            <div class="bg-[#c9d7c0] border-2 border-[#152012] p-4 rounded shadow-2xl text-center max-w-[80%]">
+              <h2 class="text-3xl lcd-digits font-bold tracking-widest text-[#152012] leading-none mb-1">GAME OVER</h2>
+              <p class="text-xs text-[#263321] font-mono mb-3">SCORE: <span id="finalScoreVal" class="font-bold text-sm">0</span></p>
+              <button id="modalRestartBtn" class="bg-[#73131c] text-[#fbeec8] px-4 py-1.5 rounded text-xs font-bold active:scale-95 transition shadow">
+                START AGAIN
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Bezel Label -->
+      <div class="w-full text-center font-bold tracking-[0.25em] text-[#56070d] text-[10px] sm:text-xs mt-1">
+        • WIDE SCREEN •
+      </div>
+
+    </div>
+
+    <!-- Handheld Controller Pad: Big Classic Tactile Rubber Buttons -->
+    <div class="w-full mt-3 sm:mt-4 flex items-center justify-between px-3 sm:px-8">
+      
+      <!-- LEFT Button: Retreat / Climb to boat -->
+      <div class="flex flex-col items-center">
+        <button id="btnLeft" class="game-button w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center text-amber-100 font-bold border-2 border-[#4b060b]">
+          <svg class="w-9 h-9 fill-current" viewBox="0 0 24 24">
+            <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"/>
+          </svg>
+          <span class="text-xs tracking-wider">LEFT</span>
+        </button>
+        <span class="text-[9px] text-[#ebd793]/85 mt-1 font-bold tracking-wider">RETREAT</span>
+      </div>
+
+      <!-- Center Instruction Badge -->
+      <div class="flex flex-col items-center text-center text-[#ebd793]/75 text-[10px] leading-tight">
+        <div id="modeTag" class="text-xs font-bold text-[#ffd778] tracking-widest uppercase">GAME A</div>
+        <div class="text-[9px] text-amber-200/60 mt-0.5">HIGH: <span id="hiScoreVal">0000</span></div>
+      </div>
+
+      <!-- RIGHT Button: Dive down / Scoop treasure -->
+      <div class="flex flex-col items-center">
+        <button id="btnRight" class="game-button w-20 h-20 sm:w-24 sm:h-24 rounded-full flex flex-col items-center justify-center text-amber-100 font-bold border-2 border-[#4b060b]">
+          <svg class="w-9 h-9 fill-current" viewBox="0 0 24 24">
+            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"/>
+          </svg>
+          <span class="text-xs tracking-wider">RIGHT</span>
+        </button>
+        <span class="text-[9px] text-[#ebd793]/85 mt-1 font-bold tracking-wider">DIVE / TAKE</span>
+      </div>
+
+    </div>
+
+    <!-- Desktop Keyboard Notice -->
+    <div class="text-[9px] text-[#ebd793]/60 mt-2 text-center">
+      [ Keyboard: <kbd class="px-1 bg-black/40 rounded border border-amber-200/20">◀</kbd> / <kbd class="px-1 bg-black/40 rounded border border-amber-200/20">A</kbd> = Left | <kbd class="px-1 bg-black/40 rounded border border-amber-200/20">▶</kbd> / <kbd class="px-1 bg-black/40 rounded border border-amber-200/20">D</kbd> / <kbd class="px-1 bg-black/40 rounded border border-amber-200/20">Space</kbd> = Right ]
+    </div>
+
+  </div>
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    /* =====================================================================
+       1. VINTAGE 1-BIT PIEZO BUZZER SOUND SYNTHESIZER (Web Audio API)
+       ===================================================================== */
+    class GWBeepEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AC = window.AudioContext || window.webkitAudioContext;
+          if (AC) this.ctx = new AC();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      beep(freq, duration = 0.035, type = 'square') {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+          gain.gain.setValueAtTime(0.08, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + duration);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + duration);
+        } catch (e) {
+          // Audio safe guard
+        }
+      }
+
+      step() { this.beep(1040, 0.03); }
+      takeGold() { 
+        this.beep(1480, 0.025); 
+        setTimeout(() => this.beep(2093, 0.04), 30);
+      }
+      depositGold() {
+        this.beep(784, 0.04);
+        setTimeout(() => this.beep(1046, 0.05), 50);
+        setTimeout(() => this.beep(1567, 0.08), 110);
+      }
+      tentacleMove() { this.beep(240, 0.02); }
+      caught() {
+        this.beep(330, 0.12, 'sawtooth');
+        setTimeout(() => this.beep(220, 0.15, 'sawtooth'), 120);
+        setTimeout(() => this.beep(146, 0.25, 'sawtooth'), 260);
+      }
+    }
+
+    const audio = new GWBeepEngine();
+
+    /* =====================================================================
+       2. GAME ENGINE STATE & 1:1 OCTOPUS LOGIC
+       ===================================================================== */
+    const canvas = document.getElementById('gwCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // UI Controls
+    const soundToggle = document.getElementById('soundToggle');
+    const soundLabel = document.getElementById('soundLabel');
+    const aclBtn = document.getElementById('aclBtn');
+    const btnGameA = document.getElementById('btnGameA');
+    const btnGameB = document.getElementById('btnGameB');
+    const btnTime = document.getElementById('btnTime');
+    const btnLeft = document.getElementById('btnLeft');
+    const btnRight = document.getElementById('btnRight');
+    const modeTag = document.getElementById('modeTag');
+    const hiScoreVal = document.getElementById('hiScoreVal');
+    const gameOverModal = document.getElementById('gameOverModal');
+    const finalScoreVal = document.getElementById('finalScoreVal');
+    const modalRestartBtn = document.getElementById('modalRestartBtn');
+
+    // Modes & Scores
+    let gameMode = 'A'; // 'A', 'B', 'TIME'
+    let score = 0;
+    let misses = 0; // max 3 misses
+    let hiScore = parseInt(localStorage.getItem('gw_octopus_hi') || '0', 10);
+    hiScoreVal.innerText = hiScore.toString().padStart(4, '0');
+
+    // Diver state
+    // 0 = Boat, 1 = Line/Top, 2 = Mid water, 3 = Low water, 4 = Chest grabbing
+    let diverPos = 0;
+    let goldBag = 0; // Number of coins currently carried (max bonus)
+    let isCaught = false;
+    let caughtCountdown = 0;
+    let isGameOver = false;
+
+    // Tentacle Segment LCD states (authentic discrete steps)
+    // T1: Top-left tentacle (reaches Pos 1). maxStep = 3
+    // T2: Mid-high tentacle (reaches Pos 2). maxStep = 4
+    // T3: Mid-low tentacle (reaches Pos 3). maxStep = 4
+    // T4: Bottom right tentacle (wraps chest / Pos 4). maxStep = 3
+    const tentacles = [
+      { step: 0, maxStep: 3, dangerSlot: 1, dir: 1, baseSpeed: 44, counter: 14 },
+      { step: 0, maxStep: 4, dangerSlot: 2, dir: 1, baseSpeed: 36, counter: 28 },
+      { step: 0, maxStep: 4, dangerSlot: 3, dir: 1, baseSpeed: 40, counter: 8  },
+      { step: 0, maxStep: 3, dangerSlot: 4, dir: 1, baseSpeed: 30, counter: 20 }
+    ];
+
+    let frameTick = 0;
+
+    function vibrate() {
+      if (navigator.vibrate) {
+        try { navigator.vibrate(25); } catch(e){}
+      }
+    }
+
+    function resetGame(mode = 'A') {
+      gameMode = mode;
+      score = 0;
+      misses = 0;
+      diverPos = 0;
+      goldBag = 0;
+      isCaught = false;
+      caughtCountdown = 0;
+      isGameOver = false;
+      frameTick = 0;
+
+      tentacles.forEach((t, i) => {
+        t.step = 0;
+        t.dir = 1;
+        t.counter = 10 + i * 12;
+      });
+
+      modeTag.innerText = `GAME ${gameMode}`;
+      gameOverModal.classList.add('hidden');
+    }
+
+    function checkCollision() {
+      if (isCaught || isGameOver) return;
+      for (let t of tentacles) {
+        if (t.step === t.maxStep && diverPos === t.dangerSlot) {
+          triggerCaught();
+          break;
+        }
+      }
+    }
+
+    function triggerCaught() {
+      isCaught = true;
+      caughtCountdown = 60; // flash duration
+      goldBag = 0;
+      misses++;
+      audio.caught();
+      vibrate();
+
+      if (misses >= 3) {
+        setTimeout(() => {
+          isGameOver = true;
+          finalScoreVal.innerText = score;
+          if (score > hiScore) {
+            hiScore = score;
+            localStorage.setItem('gw_octopus_hi', hiScore.toString());
+            hiScoreVal.innerText = hiScore.toString().padStart(4, '0');
+          }
+          gameOverModal.classList.remove('hidden');
+        }, 1200);
+      }
+    }
+
+    function moveRight() {
+      audio.init();
+      if (isGameOver || isCaught) return;
+      vibrate();
+
+      if (diverPos < 4) {
+        diverPos++;
+        audio.step();
+        checkCollision();
+      } else if (diverPos === 4) {
+        // At the chest: scoop gold
+        goldBag++;
+        score += 1;
+        if (score > hiScore) {
+          hiScore = score;
+          localStorage.setItem('gw_octopus_hi', hiScore.toString());
+          hiScoreVal.innerText = hiScore.toString().padStart(4, '0');
+        }
+        audio.takeGold();
+      }
+    }
+
+    function moveLeft() {
+      audio.init();
+      if (isGameOver || isCaught) return;
+      vibrate();
+
+      if (diverPos > 0) {
+        diverPos--;
+        audio.step();
+
+        if (diverPos === 0) {
+          // Safely returned to boat! Deposit gold bag for large bonus
+          if (goldBag > 0) {
+            score += goldBag * 3;
+            goldBag = 0;
+            if (score > hiScore) {
+              hiScore = score;
+              localStorage.setItem('gw_octopus_hi', hiScore.toString());
+              hiScoreVal.innerText = hiScore.toString().padStart(4, '0');
+            }
+            audio.depositGold();
+          }
+        } else {
+          checkCollision();
+        }
+      }
+    }
+
+    /* =====================================================================
+       3. 1:1 AUTHENTIC SILK-SCREEN BACKGROUND & DISCRETE LCD SEGMENTS
+       ===================================================================== */
+    const LCD_INK = '#152012'; // Deep greenish-black liquid crystal segment color
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. SILK-SCREEN PRINTED COLOR OVERLAY (Exact 1981 Wide Screen Layer)
+      drawAuthenticColorOverlay();
+
+      // 2. FIXED LCD DISPLAY HUD (Clock / Score / Misses)
+      drawDigitalHUD();
+
+      // 3. SHIPWRECK & CHEST
+      drawSunkenGalleon();
+
+      // 4. RETRO OCTOPUS BODY & SUCTION PATTERN
+      drawAuthenticOctopusHead();
+
+      // 5. DISCRETE LCD TENTACLE SEGMENTS
+      drawDiscreteTentacleSegments();
+
+      // 6. RETRO DIVER SILHOUETTE & RESCUE BOAT
+      drawDiverAndBoat();
+    }
+
+    // 1. Original silk-screen printed color backdrop:
+    // Turquoise water tint across middle, dark seafloor, sunken red/brown ship, and boat
+    function drawAuthenticColorOverlay() {
+      // Light blue-turquoise water tint wash
+      const waterGrad = ctx.createLinearGradient(0, 75, 0, 360);
+      waterGrad.addColorStop(0, 'rgba(125, 204, 206, 0.35)');
+      waterGrad.addColorStop(0.55, 'rgba(88, 182, 190, 0.45)');
+      waterGrad.addColorStop(1, 'rgba(60, 145, 155, 0.28)');
+      ctx.fillStyle = waterGrad;
+      ctx.fillRect(0, 80, canvas.width, 290);
+
+      // Sea waves prints (horizontal turquoise stylized wave bars)
+      ctx.fillStyle = 'rgba(54, 155, 165, 0.40)';
+      const waveBars = [
+        [28, 96, 115], [168, 93, 135], [328, 96, 105],
+        [58, 132, 95], [208, 128, 90],
+        [38, 162, 125], [178, 164, 115],
+        [68, 197, 100], [218, 200, 85]
+      ];
+      waveBars.forEach(([wx, wy, ww]) => {
+        ctx.beginPath();
+        ctx.roundRect(wx, wy, ww, 4, 2);
+        ctx.fill();
+      });
+
+      // Dark seaweed & coral silhouettes along bottom
+      ctx.fillStyle = 'rgba(34, 94, 68, 0.6)';
+      ctx.beginPath();
+      // Greenish sea floor bed
+      ctx.moveTo(0, 420);
+      ctx.lineTo(0, 385);
+      ctx.quadraticCurveTo(80, 375, 160, 388);
+      ctx.quadraticCurveTo(260, 400, 380, 388);
+      ctx.lineTo(560, 390);
+      ctx.lineTo(560, 420);
+      ctx.closePath();
+      ctx.fill();
+
+      // Seaweeds
+      drawSilkSeaweed(55, 382, '#1a6f4d');
+      drawSilkSeaweed(135, 385, '#247f5a');
+      drawSilkSeaweed(215, 394, '#1f7452');
+    }
+
+    function drawSilkSeaweed(x, y, col) {
+      ctx.save();
+      ctx.strokeStyle = col;
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x - 9, y - 24, x - 2, y - 48);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x + 7, y);
+      ctx.quadraticCurveTo(x + 16, y - 20, x + 8, y - 38);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    // 2. HUD (Digital 7-segment clock / score & Miss indicators)
+    function drawDigitalHUD() {
+      ctx.save();
+      ctx.fillStyle = LCD_INK;
+
+      // Top water dotted line
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = LCD_INK;
+      ctx.setLineDash([7, 5]);
+      ctx.beginPath();
+      ctx.moveTo(15, 78);
+      ctx.lineTo(545, 78);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Top Left: MISSES label & icons
+      ctx.font = '10px "Share Tech Mono"';
+      ctx.fillText('MISS', 35, 30);
+      
+      // Draw 3 Miss icons (Authentic Diver Mark V Helmet Caught silhouette)
+      for (let i = 0; i < 3; i++) {
+        const mx = 68 + i * 26;
+        const my = 26;
+        if (i < misses) {
+          // Lit Mark V mini helmet indicator
+          ctx.beginPath();
+          ctx.arc(mx, my - 6, 5, 0, Math.PI * 2);
+          ctx.fill();
+          // Porch / Faceplate
+          ctx.fillStyle = '#c9d7c0';
+          ctx.beginPath();
+          ctx.arc(mx + 2, my - 6, 2, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.fillStyle = LCD_INK;
+          ctx.fillRect(mx - 4, my - 1, 9, 8);
+        } else {
+          // Faint unlit ghost LCD segment
+          ctx.strokeStyle = 'rgba(21, 32, 18, 0.12)';
+          ctx.lineWidth = 1;
+          ctx.strokeRect(mx - 4, my - 1, 9, 8);
+          ctx.beginPath();
+          ctx.arc(mx, my - 6, 5, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      // Top Right: Authentic LCD 7-Segment Score
+      ctx.font = '38px "VT323", monospace';
+      ctx.textAlign = 'right';
+      const scoreStr = score.toString().padStart(4, '0');
+      // Faint ghost '8888' backdrop
+      ctx.fillStyle = 'rgba(21, 32, 18, 0.1)';
+      ctx.fillText('8888', 525, 45);
+      // Actual lit digits
+      ctx.fillStyle = LCD_INK;
+      ctx.fillText(scoreStr, 525, 45);
+
+      // Gold in bag indicator under score
+      ctx.font = '12px "Share Tech Mono"';
+      ctx.fillText(`BAG: ${goldBag}`, 525, 62);
+
+      ctx.restore();
+    }
+
+    // 3. Sunken 17th Century Pirate Galleon & Treasure Chest
+    function drawSunkenGalleon() {
+      ctx.save();
+
+      // Silk printed reddish-brown shipwreck hull
+      ctx.fillStyle = 'rgba(139, 58, 42, 0.65)';
+      ctx.strokeStyle = LCD_INK;
+      ctx.lineWidth = 2;
+
+      ctx.beginPath();
+      ctx.moveTo(430, 390);
+      ctx.lineTo(545, 290);
+      ctx.lineTo(550, 390);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Galleon Ribs & broken stern gallery
+      ctx.beginPath();
+      ctx.moveTo(455, 380);
+      ctx.lineTo(538, 308);
+      ctx.moveTo(475, 386);
+      ctx.lineTo(544, 328);
+      ctx.moveTo(495, 388);
+      ctx.lineTo(548, 350);
+      ctx.stroke();
+
+      // Broken Mast & Crossbeam
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(492, 335);
+      ctx.lineTo(476, 260);
+      ctx.moveTo(460, 285);
+      ctx.lineTo(495, 280);
+      ctx.stroke();
+
+      // Lantern on stern post
+      ctx.fillRect(525, 275, 6, 10);
+      ctx.beginPath();
+      ctx.arc(528, 273, 3, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Authentic Open Treasure Chest (Gold chest at bottom right)
+      const cx = 405;
+      const cy = 345;
+      ctx.fillStyle = LCD_INK;
+
+      // Chest Base
+      ctx.fillRect(cx, cy, 46, 36);
+
+      // Iron Straps & Keyhole
+      ctx.fillStyle = '#c9d7c0';
+      ctx.fillRect(cx + 8, cy, 5, 36);
+      ctx.fillRect(cx + 33, cy, 5, 36);
+      ctx.beginPath();
+      ctx.arc(cx + 23, cy + 16, 3.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Raised Chest Lid tilted backward
+      ctx.fillStyle = LCD_INK;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.lineTo(cx + 42, cy - 24);
+      ctx.lineTo(cx + 48, cy - 20);
+      ctx.lineTo(cx + 46, cy);
+      ctx.closePath();
+      ctx.fill();
+
+      // Overflowing gold mound inside chest
+      ctx.beginPath();
+      ctx.arc(cx + 23, cy + 6, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    // 4. Authentic Nintendo Octopus Organic Head & Suction Pattern
+    function drawAuthenticOctopusHead() {
+      ctx.save();
+      ctx.fillStyle = LCD_INK;
+
+      // Organic, fleshy cephalopod mantle with natural asymmetrical folds & dorsal humps
+      ctx.beginPath();
+      ctx.moveTo(348, 155);
+      // Top dorsal hump & cranial curvature
+      ctx.bezierCurveTo(336, 122, 366, 92, 418, 95);
+      ctx.bezierCurveTo(466, 98, 498, 118, 495, 158);
+      // Drooping posterior visceral sac & lower folds
+      ctx.bezierCurveTo(492, 196, 458, 232, 412, 224);
+      // Ventral webbed skirt at tentacle base
+      ctx.bezierCurveTo(386, 222, 376, 236, 350, 226);
+      ctx.bezierCurveTo(328, 219, 326, 194, 334, 176);
+      ctx.bezierCurveTo(336, 165, 342, 159, 348, 155);
+      ctx.closePath();
+      ctx.fill();
+
+      // Hooded brow ridges
+      ctx.beginPath();
+      ctx.moveTo(346, 140);
+      ctx.bezierCurveTo(326, 136, 306, 153, 310, 173);
+      ctx.bezierCurveTo(313, 190, 330, 194, 343, 188);
+      ctx.closePath();
+      ctx.fill();
+
+      // Authentic Cephalopod Slit Eyes
+      drawOrganicEye(334, 160, 11, 14, -0.15, 330, 162);
+      drawOrganicEye(367, 150, 12, 15, 0.1, 363, 152);
+
+      // Authentic Hollow Circular Suction Cups
+      const organicSuctions = [
+        { x: 424, y: 120, rx: 7, ry: 5, rot: 0.2 },
+        { x: 457, y: 133, rx: 8, ry: 6, rot: 0.4 },
+        { x: 471, y: 163, rx: 7, ry: 6, rot: 0.1 },
+        { x: 449, y: 193, rx: 8, ry: 5.5, rot: -0.3 },
+        { x: 417, y: 203, rx: 7, ry: 5, rot: -0.1 },
+        { x: 381, y: 210, rx: 6, ry: 4.5, rot: 0.25 },
+        { x: 394, y: 170, rx: 5.5, ry: 4.5, rot: -0.2 },
+        { x: 424, y: 158, rx: 6, ry: 5, rot: 0.1 }
+      ];
+
+      organicSuctions.forEach(s => {
+        ctx.fillStyle = '#c9d7c0';
+        ctx.beginPath();
+        ctx.ellipse(s.x, s.y, s.rx, s.ry, s.rot, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = LCD_INK;
+        ctx.beginPath();
+        ctx.ellipse(s.x, s.y, s.rx * 0.48, s.ry * 0.48, s.rot, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      ctx.restore();
+    }
+
+    function drawOrganicEye(cx, cy, rx, ry, rot, pupilX, pupilY) {
+      ctx.save();
+      // Socket
+      ctx.fillStyle = '#c9d7c0';
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, rot, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Slit pupil
+      ctx.fillStyle = LCD_INK;
+      ctx.beginPath();
+      ctx.ellipse(pupilX, pupilY, rx * 0.58, ry * 0.52, rot, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Catch-light highlight
+      ctx.fillStyle = '#c9d7c0';
+      ctx.beginPath();
+      ctx.arc(pupilX + 2, pupilY - 2, 1.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 5. Discrete Organic Segmented LCD Tentacles (4 Sinuous Arms)
+    function drawDiscreteTentacleSegments() {
+      ctx.save();
+      ctx.fillStyle = LCD_INK;
+      ctx.strokeStyle = LCD_INK;
+
+      // TENTACLE 1 (Upper-Left)
+      const t1 = tentacles[0].step;
+      if (t1 >= 1) {
+        ctx.beginPath();
+        ctx.moveTo(322, 150);
+        ctx.bezierCurveTo(295, 128, 275, 126, 250, 138);
+        ctx.bezierCurveTo(260, 155, 280, 158, 314, 172);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(282, 138, 4.2);
+        drawSuction(262, 142, 3.8);
+      }
+      if (t1 >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(252, 137);
+        ctx.bezierCurveTo(225, 146, 205, 142, 185, 156);
+        ctx.bezierCurveTo(192, 169, 218, 168, 248, 153);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(222, 152, 3.8);
+        drawSuction(198, 158, 3.2);
+      }
+      if (t1 >= 3) {
+        ctx.beginPath();
+        ctx.moveTo(186, 154);
+        ctx.bezierCurveTo(160, 162, 135, 160, 118, 172);
+        ctx.bezierCurveTo(106, 180, 108, 196, 124, 192);
+        ctx.bezierCurveTo(134, 188, 132, 176, 125, 172);
+        ctx.bezierCurveTo(140, 170, 162, 172, 184, 166);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(152, 165, 3.0);
+        drawSuction(132, 174, 2.5);
+      }
+
+      // TENTACLE 2 (Mid-Left)
+      const t2 = tentacles[1].step;
+      if (t2 >= 1) {
+        ctx.beginPath();
+        ctx.moveTo(330, 182);
+        ctx.bezierCurveTo(300, 188, 280, 192, 260, 208);
+        ctx.bezierCurveTo(270, 222, 298, 218, 324, 202);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(295, 198, 4.0);
+      }
+      if (t2 >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(262, 206);
+        ctx.bezierCurveTo(240, 218, 224, 222, 206, 236);
+        ctx.bezierCurveTo(215, 248, 235, 244, 258, 222);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(238, 224, 3.6);
+      }
+      if (t2 >= 3) {
+        ctx.beginPath();
+        ctx.moveTo(208, 234);
+        ctx.bezierCurveTo(192, 246, 180, 252, 166, 264);
+        ctx.bezierCurveTo(174, 274, 190, 268, 206, 248);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(188, 252, 3.2);
+      }
+      if (t2 >= 4) {
+        ctx.beginPath();
+        ctx.moveTo(167, 262);
+        ctx.bezierCurveTo(148, 272, 132, 278, 135, 294);
+        ctx.bezierCurveTo(138, 304, 154, 302, 155, 290);
+        ctx.bezierCurveTo(155, 282, 148, 280, 142, 282);
+        ctx.bezierCurveTo(148, 274, 158, 270, 166, 274);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(150, 282, 2.5);
+      }
+
+      // TENTACLE 3 (Lower-Left)
+      const t3 = tentacles[2].step;
+      if (t3 >= 1) {
+        ctx.beginPath();
+        ctx.moveTo(344, 216);
+        ctx.bezierCurveTo(325, 232, 310, 244, 295, 256);
+        ctx.bezierCurveTo(304, 270, 325, 260, 342, 238);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(322, 246, 4.0);
+      }
+      if (t3 >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(296, 254);
+        ctx.bezierCurveTo(280, 268, 266, 278, 252, 288);
+        ctx.bezierCurveTo(260, 300, 278, 292, 294, 272);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(276, 278, 3.5);
+      }
+      if (t3 >= 3) {
+        ctx.beginPath();
+        ctx.moveTo(253, 286);
+        ctx.bezierCurveTo(240, 296, 232, 305, 222, 316);
+        ctx.bezierCurveTo(230, 326, 244, 318, 252, 302);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(238, 306, 3.0);
+      }
+      if (t3 >= 4) {
+        ctx.beginPath();
+        ctx.moveTo(223, 314);
+        ctx.bezierCurveTo(210, 325, 202, 334, 208, 345);
+        ctx.bezierCurveTo(214, 352, 226, 348, 225, 338);
+        ctx.bezierCurveTo(224, 332, 216, 332, 212, 336);
+        ctx.bezierCurveTo(214, 328, 222, 322, 226, 325);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(218, 332, 2.4);
+      }
+
+      // TENTACLE 4 (Lower-Right)
+      const t4 = tentacles[3].step;
+      if (t4 >= 1) {
+        ctx.beginPath();
+        ctx.moveTo(382, 224);
+        ctx.bezierCurveTo(392, 245, 396, 265, 388, 285);
+        ctx.bezierCurveTo(374, 282, 372, 258, 366, 228);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(382, 255, 3.8);
+      }
+      if (t4 >= 2) {
+        ctx.beginPath();
+        ctx.moveTo(388, 282);
+        ctx.bezierCurveTo(386, 302, 382, 318, 374, 332);
+        ctx.bezierCurveTo(360, 326, 366, 304, 372, 284);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(376, 306, 3.4);
+      }
+      if (t4 >= 3) {
+        ctx.beginPath();
+        ctx.moveTo(375, 330);
+        ctx.bezierCurveTo(368, 346, 350, 355, 338, 348);
+        ctx.bezierCurveTo(326, 340, 332, 324, 346, 324);
+        ctx.bezierCurveTo(356, 324, 356, 336, 346, 338);
+        ctx.bezierCurveTo(342, 338, 340, 334, 342, 332);
+        ctx.bezierCurveTo(350, 332, 356, 342, 368, 338);
+        ctx.closePath();
+        ctx.fill();
+        drawSuction(352, 342, 2.6);
+        drawSuction(340, 334, 2.2);
+      }
+
+      ctx.restore();
+    }
+
+    function drawSuction(x, y, r) {
+      ctx.save();
+      ctx.fillStyle = '#c9d7c0';
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = LCD_INK;
+      ctx.beginPath();
+      ctx.arc(x, y, r * 0.45, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    /* =====================================================================
+       AUTHENTIC SIEBE GORMAN / MARK V BRASS DIVING HELMET RENDERER
+       Includes round spun copper dome, front circular viewport / faceplate grille,
+       side oval port cutouts, breastplate / corselet collar clamped to canvas suit,
+       and air elbow valve connector.
+       ===================================================================== */
+    function drawMarkVDiverHelmet(hx, hy, angle = 0, scale = 1.0) {
+      ctx.save();
+      ctx.translate(hx, hy);
+      ctx.rotate(angle);
+      ctx.scale(scale, scale);
+
+      ctx.fillStyle = LCD_INK;
+      ctx.strokeStyle = LCD_INK;
+
+      // 1. Heavy Curved Brass Breastplate / Corselet Base
+      ctx.beginPath();
+      ctx.moveTo(-9, 4);
+      ctx.quadraticCurveTo(0, 7.5, 9, 4);
+      ctx.lineTo(8, 9);
+      ctx.quadraticCurveTo(0, 11, -8, 9);
+      ctx.closePath();
+      ctx.fill();
+
+      // Neck ring clamp rim
+      ctx.fillRect(-7.5, 2.5, 15, 2.5);
+
+      // 2. Spherical Bonnet / Copper Dome
+      ctx.beginPath();
+      ctx.arc(0, -2, 9, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Top air escape valve knob / eye bolt
+      ctx.fillRect(-2, -12, 4, 2.5);
+
+      // 3. Front Circular Viewing Window (Glass Faceplate with Brass Grille)
+      // Viewing Glass Cutout
+      ctx.fillStyle = '#c9d7c0';
+      ctx.beginPath();
+      ctx.arc(3.2, -1.8, 4.4, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Outer bezel ring & cross wire guard grille
+      ctx.strokeStyle = LCD_INK;
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      ctx.arc(3.2, -1.8, 4.4, 0, Math.PI * 2);
+      // Horizontal cross guard
+      ctx.moveTo(-0.8, -1.8);
+      ctx.lineTo(7.2, -1.8);
+      // Vertical cross guard
+      ctx.moveTo(3.2, -5.8);
+      ctx.lineTo(3.2, 2.2);
+      ctx.stroke();
+
+      // 4. Side Oval Port Window (Light Port on helmet side)
+      ctx.fillStyle = '#c9d7c0';
+      ctx.beginPath();
+      ctx.ellipse(-5.2, -2, 1.8, 3.2, 0.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = LCD_INK;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.ellipse(-5.2, -2, 1.8, 3.2, 0.1, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // 5. Back Air Hose Elbow Connector Fitting
+      ctx.fillStyle = LCD_INK;
+      ctx.fillRect(-9.5, -4.5, 2.5, 4);
+
+      ctx.restore();
+    }
+
+    // 6. Diver & Rescue Rowboat
+    function drawDiverAndBoat() {
+      ctx.save();
+      ctx.fillStyle = LCD_INK;
+      ctx.strokeStyle = LCD_INK;
+
+      // Rescue Rowboat at top-left
+      ctx.beginPath();
+      ctx.moveTo(40, 68);
+      ctx.lineTo(145, 68);
+      ctx.lineTo(130, 88);
+      ctx.lineTo(55, 88);
+      ctx.closePath();
+      ctx.fill();
+
+      // Air compressor tank & rope spool on boat deck
+      ctx.fillRect(48, 56, 12, 12);
+      ctx.beginPath();
+      ctx.arc(54, 56, 5, Math.PI, 0);
+      ctx.fill();
+
+      // Crew member 1 (Boat lookout - left)
+      ctx.beginPath();
+      ctx.arc(74, 53, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillRect(68, 60, 12, 8);
+
+      // Crew member 2 (Holding lifeline & air compressor line)
+      const panicked = isCaught;
+      ctx.beginPath();
+      ctx.arc(104, 53, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillRect(98, 60, 12, 8);
+      
+      ctx.lineWidth = 2.5;
+      if (panicked) {
+        // Panic arms up in the air!
+        ctx.beginPath();
+        ctx.moveTo(98, 62);
+        ctx.lineTo(88, 46);
+        ctx.moveTo(110, 62);
+        ctx.lineTo(120, 46);
+        ctx.stroke();
+      } else {
+        // Firmly tending the diver's rubber air hose
+        ctx.beginPath();
+        ctx.moveTo(100, 64);
+        ctx.lineTo(116, 72);
+        ctx.stroke();
+      }
+
+      // If diver is caught, flash him in LCD style
+      if (isCaught && Math.floor(frameTick / 4) % 2 === 0) {
+        ctx.restore();
+        return;
+      }
+
+      // POS 0: Standing ready on boat deck
+      if (diverPos === 0) {
+        const dx = 124;
+        const dy = 44;
+
+        // Authentic Mark V Diving Helmet
+        drawMarkVDiverHelmet(dx, dy, 0, 1.05);
+
+        // Heavy Canvas Diving Suit (folds & wrinkles)
+        ctx.fillStyle = LCD_INK;
+        ctx.fillRect(dx - 6, dy + 10, 13, 14);
+
+        // Weighted belt around waist
+        ctx.fillRect(dx - 7, dy + 20, 15, 3.5);
+
+        // Arms holding ladder/deck
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(dx + 5, dy + 13);
+        ctx.lineTo(dx + 12, dy + 18);
+        ctx.stroke();
+
+        // Thick canvas legs with heavy lead-soled weighted boots
+        ctx.beginPath();
+        ctx.moveTo(dx - 3, dy + 24);
+        ctx.lineTo(dx - 3, dy + 34);
+        ctx.lineTo(dx - 7, dy + 34); // Lead boot toe
+        ctx.moveTo(dx + 4, dy + 24);
+        ctx.lineTo(dx + 4, dy + 34);
+        ctx.lineTo(dx + 8, dy + 34);
+        ctx.stroke();
+
+      } else if (diverPos === 1) {
+        // POS 1: Hanging from the lifeline rope below boat
+        const dx = 114;
+        const dy = 160;
+
+        // Air hose running directly into helmet back fitting
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(116, 72);
+        ctx.bezierCurveTo(126, 105, 96, 128, dx - 9, dy - 4);
+        ctx.stroke();
+
+        // Mark V Helmet tilted slightly down
+        drawMarkVDiverHelmet(dx, dy, 0.1, 1.05);
+
+        // Torso & Heavy Suit
+        ctx.fillStyle = LCD_INK;
+        ctx.fillRect(dx - 6, dy + 10, 13, 14);
+        ctx.fillRect(dx - 7, dy + 20, 15, 3.5);
+
+        // Hands gripping descending line
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(dx - 4, dy + 12);
+        ctx.lineTo(dx + 7, dy + 8);
+        ctx.moveTo(dx - 4, dy + 17);
+        ctx.lineTo(dx + 7, dy + 14);
+        ctx.stroke();
+
+        // Dangling weighted legs
+        ctx.beginPath();
+        ctx.moveTo(dx - 3, dy + 24);
+        ctx.lineTo(dx - 6, dy + 36);
+        ctx.lineTo(dx - 10, dy + 36);
+        ctx.moveTo(dx + 4, dy + 24);
+        ctx.lineTo(dx + 4, dy + 36);
+        ctx.lineTo(dx + 8, dy + 36);
+        ctx.stroke();
+
+        drawGoldBag(dx - 14, dy + 14);
+
+      } else if (diverPos === 2) {
+        // POS 2: Swimming forward mid-water
+        const dx = 148;
+        const dy = 250;
+
+        // Long flexible air line from boat to helmet
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(116, 72);
+        ctx.bezierCurveTo(90, 130, 95, 205, dx - 14, dy - 8);
+        ctx.stroke();
+
+        ctx.translate(dx, dy);
+        ctx.rotate(0.35);
+
+        // Mark V Diving Helmet facing down-forward
+        drawMarkVDiverHelmet(0, -10, 0.15, 1.05);
+
+        // Canvas Suit Body & Back Air Harness
+        ctx.fillStyle = LCD_INK;
+        ctx.fillRect(-7, 0, 14, 15);
+        ctx.fillRect(-12, 1, 5, 12); // Back harness bracket
+        ctx.fillRect(-8, 11, 16, 3.5); // Weight belt
+
+        // Swimming arms
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(5, 3);
+        ctx.lineTo(17, 10);
+        ctx.stroke();
+
+        // Canvas legs with lead boots kicking back
+        ctx.beginPath();
+        ctx.moveTo(-3, 15);
+        ctx.lineTo(-11, 28);
+        ctx.lineTo(-18, 26);
+        ctx.moveTo(3, 15);
+        ctx.lineTo(1, 28);
+        ctx.lineTo(-6, 26);
+        ctx.stroke();
+
+        drawGoldBag(-16, 3);
+
+        ctx.rotate(-0.35);
+        ctx.translate(-dx, -dy);
+
+      } else if (diverPos === 3) {
+        // POS 3: Reaching diagonally down toward seabed
+        const dx = 232;
+        const dy = 300;
+
+        // Air hose descending to seafloor
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(116, 72);
+        ctx.bezierCurveTo(80, 160, 120, 260, dx - 14, dy - 8);
+        ctx.stroke();
+
+        ctx.translate(dx, dy);
+        ctx.rotate(0.20);
+
+        // Mark V Diving Helmet tilted towards chest
+        drawMarkVDiverHelmet(0, -10, 0.25, 1.05);
+
+        // Body & Canvas suit
+        ctx.fillStyle = LCD_INK;
+        ctx.fillRect(-7, 0, 14, 15);
+        ctx.fillRect(-12, 1, 5, 12);
+        ctx.fillRect(-8, 11, 16, 3.5);
+
+        // Arms reaching forward towards chest
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(5, 4);
+        ctx.lineTo(19, 10);
+        ctx.stroke();
+
+        // Kicking boots
+        ctx.beginPath();
+        ctx.moveTo(-3, 15);
+        ctx.lineTo(-8, 27);
+        ctx.lineTo(-14, 25);
+        ctx.moveTo(3, 15);
+        ctx.lineTo(2, 27);
+        ctx.lineTo(-4, 25);
+        ctx.stroke();
+
+        drawGoldBag(-16, 3);
+
+        ctx.rotate(-0.20);
+        ctx.translate(-dx, -dy);
+
+      } else if (diverPos === 4) {
+        // POS 4: Kneeling at the chest scooping gold coins
+        const dx = 352;
+        const dy = 328;
+
+        // Long air hose snaking all the way across
+        ctx.lineWidth = 2.2;
+        ctx.beginPath();
+        ctx.moveTo(116, 72);
+        ctx.bezierCurveTo(70, 190, 160, 360, dx - 18, dy - 2);
+        ctx.stroke();
+
+        // Mark V Helmet bent downward into treasure chest
+        drawMarkVDiverHelmet(dx - 5, dy - 8, 0.45, 1.05);
+
+        // Canvas suit torso
+        ctx.fillStyle = LCD_INK;
+        ctx.fillRect(dx - 12, dy + 2, 14, 15);
+        ctx.fillRect(dx - 17, dy + 3, 5, 12);
+        ctx.fillRect(dx - 13, dy + 13, 16, 3.5);
+
+        // Hands submerged into open chest scooping gold
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.moveTo(dx, dy + 5);
+        ctx.lineTo(dx + 22, dy + 11);
+        ctx.lineTo(dx + 29, dy + 22);
+        ctx.stroke();
+
+        // Kneeling weighted canvas legs & heavy lead boot soles
+        ctx.beginPath();
+        ctx.moveTo(dx - 9, dy + 17);
+        ctx.lineTo(dx - 19, dy + 26);
+        ctx.lineTo(dx - 4, dy + 26); // Flat heavy sole on reef
+        ctx.stroke();
+
+        drawGoldBag(dx - 24, dy + 7);
+      }
+
+      ctx.restore();
+    }
+
+    function drawGoldBag(x, y) {
+      if (goldBag > 0) {
+        ctx.save();
+        ctx.fillStyle = LCD_INK;
+        ctx.beginPath();
+        // Progressively expanding coin sack
+        const radius = 6.5 + Math.min(goldBag * 1.0, 8);
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Sack tie string knot
+        ctx.fillRect(x - 2, y - radius - 3, 4, 3);
+        ctx.restore();
+      }
+    }
+
+    /* =====================================================================
+       4. MAIN GAME TICK & SEGMENT TIMERS
+       ===================================================================== */
+    function updateEngine() {
+      frameTick++;
+
+      if (isCaught) {
+        caughtCountdown--;
+        if (caughtCountdown <= 0) {
+          isCaught = false;
+          diverPos = 0; // Respawn diver at boat deck
+        }
+        return;
+      }
+
+      if (isGameOver) return;
+
+      // Speed increases with accumulated score and Game B mode
+      const modeMultiplier = (gameMode === 'B') ? 0.75 : 1.0;
+      const scoreRamp = Math.max(0.40, 1.0 - Math.min(score, 180) * 0.004);
+      const totalSpeedFactor = modeMultiplier * scoreRamp;
+
+      tentacles.forEach(t => {
+        t.counter -= 1;
+        if (t.counter <= 0) {
+          t.counter = Math.round(t.baseSpeed * totalSpeedFactor) + Math.floor(Math.random() * 5);
+
+          if (t.dir === 1) {
+            t.step++;
+            audio.tentacleMove();
+            if (t.step >= t.maxStep) {
+              t.step = t.maxStep;
+              t.dir = -1; // Retract next
+            }
+          } else {
+            t.step--;
+            if (t.step <= 0) {
+              t.step = 0;
+              t.dir = 1; // Extend next
+            }
+          }
+
+          checkCollision();
+        }
+      });
+    }
+
+    function animationLoop() {
+      updateEngine();
+      render();
+      requestAnimationFrame(animationLoop);
+    }
+
+    /* =====================================================================
+       5. INPUT EVENTS & SYSTEM BUTTONS
+       ===================================================================== */
+    btnLeft.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      moveLeft();
+    });
+
+    btnRight.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      moveRight();
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.repeat) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        moveLeft();
+      } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D' || e.key === ' ') {
+        moveRight();
+      }
+    });
+
+    // Sound toggle
+    soundToggle.addEventListener('click', () => {
+      audio.enabled = !audio.enabled;
+      soundLabel.innerText = audio.enabled ? '🔊 ON' : '🔇 OFF';
+      vibrate();
+    });
+
+    // ACL / Clear / Reset button
+    aclBtn.addEventListener('click', () => {
+      resetGame(gameMode);
+      vibrate();
+    });
+
+    // Mode Buttons
+    btnGameA.addEventListener('click', () => {
+      resetGame('A');
+      audio.step();
+      vibrate();
+    });
+
+    btnGameB.addEventListener('click', () => {
+      resetGame('B');
+      audio.step();
+      vibrate();
+    });
+
+    btnTime.addEventListener('click', () => {
+      // Toggle Time Display or reset
+      audio.step();
+      vibrate();
+    });
+
+    modalRestartBtn.addEventListener('click', () => {
+      resetGame(gameMode);
+    });
+
+    window.onload = function () {
+      resetGame('A');
+      animationLoop();
+    };
+  </script>
+</body>
+</html>
